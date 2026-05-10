@@ -6,6 +6,12 @@ bootstrapTokens:
   ttl: "24h"
 nodeRegistration:
   criSocket: "unix:///var/run/containerd/containerd.sock"
+  kubeletExtraArgs:
+  - name: node-ip
+    value: {{ master_ip }}
+localAPIEndpoint:
+  advertiseAddress: {{ master_ip }}
+  bindPort: 6443
 ---
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
@@ -20,7 +26,8 @@ scheduler:
 apiServer:
   certSANs:
   - "{{ master_ip }}"
-controlPlaneEndpoint: "{{ master_ip }}:6443"
+  - "{{ control_plane_ip }}"
+controlPlaneEndpoint: "{{ control_plane_ip }}:6443"
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
