@@ -1,0 +1,25 @@
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: JoinConfiguration
+nodeRegistration:
+  criSocket: "unix:///var/run/containerd/containerd.sock"
+  kubeletExtraArgs:
+  - name: node-ip
+    value: {{ master_ip }}
+discovery:
+  bootstrapToken:
+    token: {{ bootstrap_token }}
+    caCertHashes:
+    - "sha256:$(discovery ca cert token)"
+    apiServerEndpoint: {{ control_plane_ip }}:6443
+{% if master_node %}
+controlPlane:
+  localAPIEndpoint:
+    advertiseAddress: {{ control_plane_ip }}
+    bindPort: 6443
+  certificateKey: {{ cert key }}
+{% endif %}
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: "systemd"
+protectKernelDefaults: true
