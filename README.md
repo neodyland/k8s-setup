@@ -1,5 +1,7 @@
-# k8s-tn23-setup
-Kubernetes setup ansible script for tuna2134
+# k8s-setup
+Kubernetes setup ansible script for neodyland.
+
+## フォーク元との比較
 
 ## 環境のセットアップ
 ```sh
