@@ -1,7 +1,8 @@
 ---
-- name: Copy k8s join command
-  copy:
-    src: ./outputs/kubeadm_join_command.sh
-    dest: /tmp/kubeadm_join_command.sh
-- name: Run k8s join command
-  command: bash /tmp/kubeadm_join_command.sh
+- name: Save worker config file
+  template:
+    src: init_join.yaml.j2
+    dest: /tmp/init_join.yaml
+- name: Join the cluster
+  command: kubeadm join --config=/tmp/init_join.yaml
+  register: join_result

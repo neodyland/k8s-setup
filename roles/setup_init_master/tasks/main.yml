@@ -34,32 +34,20 @@
   command: kubeadm init phase upload-certs --upload-certs
   register: cert_key
   when: groups['master'][0] == inventory_hostname
-- name: Generate join command
-  command: kubeadm token create --print-join-command
-  register: join_command
+- name: Generate token
+  command: kubeadm token create
+  register: token
   when: groups['master'][0] == inventory_hostname
-- name: Save kubeadm join command
-  copy:
-    content: "{{ join_command.stdout }}"
-    dest: outputs/kubeadm_join_command.sh
-  become: false
-  delegate_to: localhost
+- name: Get discovery token CA cert hash
+  command: |
+    openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | \
+      openssl rsa -pubin -outform der 2>/dev/null | \
+      openssl dgst -sha256 -hex | sed 's/^.* //'
+  register: ca_cert_hash
   when: groups['master'][0] == inventory_hostname
-- name: Set fact Join command
+- name: Set token
   set_fact:
-    join_command: "{{ join_command.stdout }} --control-plane --certificate-key {{ cert_key.stdout_lines[-1] }}"
+    k8s_token: "{{ token.stdout }}"
+    k8s_ca_cert_hash: "{{ ca_cert_hash.stdout }}"
+    k8s_cert_key: "{{ cert_key.stdout }}"
   when: groups['master'][0] == inventory_hostname
-- name: debug
-  debug:
-    msg: "Join command: {{ join_command }}"
-  when: groups['master'][0] == inventory_hostname
-- name: Join Control Plane
-  block:
-    - name: Join Control Plane
-      command: "{{ hostvars[groups['master'][0]]['join_command'] }}"
-    - name: Wait for kubelet to be ready
-      wait_for:
-        port: 6443
-        delay: 10
-        timeout: 300
-  when: groups['master'][0] != inventory_hostname

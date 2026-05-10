@@ -1,1 +1,2 @@
 master_ip: 172.16.99.100
+control_plane_ip: 172.16.99.100

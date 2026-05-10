@@ -4,19 +4,19 @@ nodeRegistration:
   criSocket: "unix:///var/run/containerd/containerd.sock"
   kubeletExtraArgs:
   - name: node-ip
-    value: {{ master_ip }}
+    value: {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
 discovery:
   bootstrapToken:
-    token: {{ bootstrap_token }}
+    token: {{ k8s_token }}
     caCertHashes:
-    - "sha256:$(discovery ca cert token)"
+    - "sha256:{{ k8s_ca_cert_hash }}"
     apiServerEndpoint: {{ control_plane_ip }}:6443
-{% if master_node %}
+{% if inventory_hostname in groups['master'] %}
 controlPlane:
   localAPIEndpoint:
     advertiseAddress: {{ control_plane_ip }}
     bindPort: 6443
-  certificateKey: {{ cert key }}
+  certificateKey: {{ k8s_cert_key }}
 {% endif %}
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
