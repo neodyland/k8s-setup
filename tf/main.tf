@@ -67,10 +67,10 @@ resource "proxmox_vm_qemu" "lb" {
     id = 0
   }
 
-  cicustom = "vm:${var.proxmox_node}:snippets/cloud-init.yaml"
   ciuser       = var.cloud_init_user
   sshkeys      = var.ssh_public_key
-  ipconfig0    = "ip=${local.lb_ips[count.index]},gw=172.16.56.254,nameserver=1.1.1.1"
+  ipconfig0    = "ip=${local.lb_ips[count.index]},gw=172.16.56.254"
+  nameserver = "1.1.1.1"
 }
 
 resource "proxmox_vm_qemu" "master" {
@@ -111,10 +111,10 @@ resource "proxmox_vm_qemu" "master" {
     id = 0
   }
 
-  cicustom = "vm:${var.proxmox_node}:snippets/cloud-init.yaml"
   ciuser     = var.cloud_init_user
   sshkeys    = var.ssh_public_key
-  ipconfig0  = "ip=${local.master_ips[count.index]},gw=172.16.56.254,nameserver=1.1.1.1"
+  ipconfig0  = "ip=${local.master_ips[count.index]},gw=172.16.56.254"
+  nameserver = "1.1.1.1"
 }
 
 resource "proxmox_vm_qemu" "worker" {
@@ -162,9 +162,9 @@ resource "proxmox_vm_qemu" "worker" {
     id = 0
   }
 
-  cicustom = "vm:${var.proxmox_node}:snippets/cloud-init.yaml"
   ciuser     = var.cloud_init_user
   sshkeys    = var.ssh_public_key
-  ipconfig0  = "ip=${local.worker_ips[count.index]},nameserver=1.1.1.1"
-  ipconfig1  = "ip=${local.worker_ext_ips[count.index]},gw=43.229.16.254,nameserver=1.1.1.1"
+  ipconfig0  = "ip=${local.worker_ips[count.index]}"
+  ipconfig1  = "ip=${local.worker_ext_ips[count.index]},gw=43.229.16.254"
+  nameserver = "1.1.1.1"
 }
