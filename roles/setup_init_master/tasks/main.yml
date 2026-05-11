@@ -39,7 +39,7 @@
   register: token
   when: groups['master'][0] == inventory_hostname
 - name: Get discovery token CA cert hash
-  command: |
+  shell: |
     openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | \
       openssl rsa -pubin -outform der 2>/dev/null | \
       openssl dgst -sha256 -hex | sed 's/^.* //'
