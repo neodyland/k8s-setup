@@ -1,0 +1,11 @@
+proxmox_url           = "https://aaaaa/api2/json"
+proxmox_user          = "root@pam"
+# proxmox_password   = "YOUR_PASSWORD"
+# proxmox_api_token_id     = "YOUR_TOKEN_ID"
+# proxmox_api_token_secret = "YOUR_TOKEN_SECRET"
+proxmox_node          = "pve"
+storage               = "local-lvm"
+template_vm           = "ubuntu-template"
+cloud_init_user       = "ubuntu"
+# cloud_init_password = "YOUR_PASSWORD"  # Optional, SSH key preferred
+ssh_public_key        = "ssh-rsa AAAA..."

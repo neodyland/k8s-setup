@@ -9,3 +9,9 @@ wheels/
 # Virtual environments
 .venv
 outputs
+tf/terraform.tfvars
+tf/.terraform/
+tf/terraform.tfstate.backup
+tf/.terraform.tfstate.lock.info
+tf/.terraform.lock.hcl
+tf/terraform.tfstate
