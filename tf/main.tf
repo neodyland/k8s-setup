@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
-      version = "3.0.2-rc06"
+      version = "3.0.2-rc07"
     }
   }
 }
@@ -53,6 +53,7 @@ resource "proxmox_vm_qemu" "lb" {
   disk {
     slot    = "ide2"
     type    = "cloudinit"
+    storage = var.storage
   }
 
   network {
@@ -91,6 +92,7 @@ resource "proxmox_vm_qemu" "master" {
   disk {
     slot    = "ide2"
     type    = "cloudinit"
+    storage = var.storage
   }
 
   network {
@@ -136,6 +138,7 @@ resource "proxmox_vm_qemu" "worker" {
   disk {
     slot    = "ide2"
     type    = "cloudinit"
+    storage = var.storage
   }
 
   network {
