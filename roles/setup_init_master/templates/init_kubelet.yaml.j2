@@ -10,7 +10,7 @@ nodeRegistration:
   - name: node-ip
     value: {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
 localAPIEndpoint:
-  advertiseAddress: {{ control_plane_ip }}
+  advertiseAddress: {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
   bindPort: 6443
 ---
 apiVersion: kubeadm.k8s.io/v1beta4
