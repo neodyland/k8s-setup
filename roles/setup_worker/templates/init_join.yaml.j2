@@ -14,7 +14,7 @@ discovery:
 {% if inventory_hostname in groups['master'] %}
 controlPlane:
   localAPIEndpoint:
-    advertiseAddress: {{ control_plane_ip }}
+    advertiseAddress: {{ hostvars[inventory_hostname]['ansible_host'] }}
     bindPort: 6443
   certificateKey: {{ hostvars[groups['master'][0]].k8s_cert_key }}
 {% endif %}
