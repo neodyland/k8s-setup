@@ -1,8 +1,31 @@
 ---
+- name: Generate certificate key
+  command: kubeadm init phase upload-certs --upload-certs
+  register: cert_key
+  when: groups['master'][0] == inventory_hostname
+- name: Generate token
+  command: kubeadm token create
+  register: token
+  when: groups['master'][0] == inventory_hostname
+- name: Get discovery token CA cert hash
+  shell: |
+    openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | \
+      openssl rsa -pubin -outform der 2>/dev/null | \
+      openssl dgst -sha256 -hex | sed 's/^.* //'
+  register: ca_cert_hash
+  when: groups['master'][0] == inventory_hostname
+- name: Set token
+  set_fact:
+    k8s_token: "{{ token.stdout }}"
+    k8s_ca_cert_hash: "{{ ca_cert_hash.stdout }}"
+    k8s_cert_key: "{{ cert_key.stdout }}"
+  when: groups['master'][0] == inventory_hostname
 - name: Save worker config file
   template:
     src: init_join.yaml.j2
     dest: /tmp/init_join.yaml
+  when: groups['master'][0] != inventory_hostname
 - name: Join the cluster
   command: kubeadm join --config=/tmp/init_join.yaml
   register: join_result
+  when: when: groups['master'][0] != inventory_hostname
