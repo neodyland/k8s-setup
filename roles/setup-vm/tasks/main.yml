@@ -1,0 +1,17 @@
+---
+- name: Change ubuntu mirror
+  shell: |
+    sed -i.bak -E \
+      '/^URIs:/ {
+        N; /Suites:.*-security/! {
+          s@http://(jp\.)?archive\.ubuntu\.com/ubuntu/?@http://ftp.udx.icscoe.jp/Linux/ubuntu/@;
+          s@http://(jp\.)?ports\.ubuntu\.com/ubuntu-ports/?@http://ftp.udx.icscoe.jp/Linux/ubuntu-ports/@;
+        }
+      }' \
+    /etc/apt/sources.list.d/ubuntu.sources
+- name: Update
+  apt:
+    update_cache: true
+    upgrade: dist
+- name: Reboot
+  reboot:
