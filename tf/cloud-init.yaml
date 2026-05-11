@@ -1,14 +1,11 @@
 #cloud-config
-apt:
-  mirror_map:
-    ubuntu: https://ftp.udx.icscoe.jp/Linux/ubuntu
-  sources:
-    ubuntu:
-      source: deb https://ftp.udx.icscoe.jp/Linux/ubuntu $RELEASE main restricted universe multiverse
-      keyid: F6ECB3762474EDA9D21B7022F3D7F9D92EBF16BB
-
 package_update: true
 package_upgrade: true
+
+runcmd:
+  - sudo sed -i.bak -E '/^URIs:/ { N; /Suites:.*-security/! { s@http://(jp\.)?archive\.ubuntu\.com/ubuntu/?@http://ftp.udx.icscoe.jp/Linux/ubuntu/@; s@http://(jp\.)?ports\.ubuntu\.com/ubuntu-ports/?@http://ftp.udx.icscoe.jp/Linux/ubuntu-ports/@; } }' /etc/apt/sources.list.d/ubuntu.sources
+  - apt-get update
+  - apt-get upgrade -y
 
 power_state:
   delay: 5
