@@ -28,4 +28,4 @@
 - name: Join the cluster
   command: kubeadm join --config=/tmp/init_join.yaml
   register: join_result
-  when: when: groups['master'][0] != inventory_hostname
+  when: groups['master'][0] != inventory_hostname
