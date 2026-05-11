@@ -2,6 +2,7 @@
 Kubernetes setup ansible script for neodyland.
 
 ## フォーク元との比較
+- terraformによる検証環境の構築の自動化
 
 ## 環境のセットアップ
 ```sh
