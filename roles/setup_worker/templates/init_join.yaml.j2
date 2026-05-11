@@ -4,7 +4,7 @@ nodeRegistration:
   criSocket: "unix:///var/run/containerd/containerd.sock"
   kubeletExtraArgs:
   - name: node-ip
-    value: {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
+    value: {{ hostvars[inventory_hostname]['ansible_host'] }}
 discovery:
   bootstrapToken:
     token: {{ hostvars[groups['master'][0]].k8s_token }}
