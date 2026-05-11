@@ -1,0 +1,17 @@
+#cloud-config
+apt:
+  mirror_map:
+    ubuntu: https://ftp.udx.icscoe.jp/Linux/ubuntu
+  sources:
+    ubuntu:
+      source: deb https://ftp.udx.icscoe.jp/Linux/ubuntu $RELEASE main restricted universe multiverse
+      keyid: F6ECB3762474EDA9D21B7022F3D7F9D92EBF16BB
+
+package_update: true
+package_upgrade: true
+
+power_state:
+  delay: 5
+  mode: reboot
+  message: "Rebooting after system update"
+  timeout: 120
