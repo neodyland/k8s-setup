@@ -11,7 +11,4 @@
     chart_ref: cilium/cilium
     release_namespace: kube-system
     create_namespace: true
-    values:
-      devices: ["eth0"]
-      egressMasqueradeInterfaces: "eth1"
   when: groups['master'][0] == inventory_hostname
