@@ -1,4 +1,6 @@
 ---
+- name: Setup
+  import_playbook: setup-vm.yml
 - name: Setup Load Balancer
   import_playbook: lb.yml
 - name: Setup k8s environment

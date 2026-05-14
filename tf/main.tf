@@ -21,8 +21,9 @@ locals {
 
   lb_ips      = [for i in range(2) : format("172.16.56.%d/24", 1 + i)]
   master_ips  = [for i in range(3) : format("172.16.56.%d/24", 3 + i)]
+  master_ext_ips = [for i in range(3) : format("43.229.17.%d/24", 2 + i)]
   worker_ips  = [for i in range(3) : format("172.16.56.%d/24", 6 + i)]
-  worker_ext_ips = [for i in range(3) : format("43.229.16.%d/25", 140 + i)]
+  worker_ext_ips = [for i in range(3) : format("43.229.17.%d/24", 5 + i)]
 
   lb_vmids = [for i in range(2) : local.starting_vmid + i]
   master_vmids = [for i in range(3) : local.starting_vmid + length(local.lb_ips) + i]
@@ -107,6 +108,13 @@ resource "proxmox_vm_qemu" "master" {
     tag    = 600
   }
 
+  network {
+    id     = 1
+    model  = "virtio"
+    bridge = "vmbr12"
+    tag    = 400
+  }
+
   serial {
     id = 0
   }
@@ -114,6 +122,7 @@ resource "proxmox_vm_qemu" "master" {
   ciuser     = var.cloud_init_user
   sshkeys    = var.ssh_public_key
   ipconfig0  = "ip=${local.master_ips[count.index]},gw=172.16.56.254"
+  ipconfig1  = "ip=${local.master_ext_ips[count.index]}"
   nameserver = "1.1.1.1"
 }
 
@@ -155,7 +164,7 @@ resource "proxmox_vm_qemu" "worker" {
     id     = 1
     model  = "virtio"
     bridge = "vmbr12"
-    tag    = 500
+    tag    = 400
   }
 
   serial {
@@ -165,6 +174,6 @@ resource "proxmox_vm_qemu" "worker" {
   ciuser     = var.cloud_init_user
   sshkeys    = var.ssh_public_key
   ipconfig0  = "ip=${local.worker_ips[count.index]}"
-  ipconfig1  = "ip=${local.worker_ext_ips[count.index]},gw=43.229.16.254"
+  ipconfig1  = "ip=${local.worker_ext_ips[count.index]},gw=43.229.17.254"
   nameserver = "1.1.1.1"
 }
